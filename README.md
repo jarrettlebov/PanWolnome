@@ -1,7 +1,7 @@
 # PanWolnome
 This is a work-in-progress repository dedicated to exploring the Wolbachia pangenome. 
 
-<!-- MarkdownTOC autolink="true" -->
+<!-- MarkdownTOC autolink="true" levels="1,2,3,4" -->
 
 - [Phylogeny Directories](#phylogeny-directories)
 - [Test](#test)
@@ -52,7 +52,6 @@ This is a work-in-progress repository dedicated to exploring the Wolbachia pange
 		- [Concatenate all core genomes and format the concatenated file so that each line contains 60 nt](#concatenate-all-core-genomes-and-format-the-concatenated-file-so-that-each-line-contains-60-nt)
 - [Run translatorx](#run-translatorx)
 	- [Run R code](#run-r-code)
-				- [PARALOG ANALYSIS](#paralog-analysis)
 - [this command iterates over each column, and writes the contents of each column to a new file titled with the header of the column](#this-command-iterates-over-each-column-and-writes-the-contents-of-each-column-to-a-new-file-titled-with-the-header-of-the-column)
 	- [delete first row in all .txt files in $Panoct_out/results/Nonparalog_core_clusters](#delete-first-row-in-all-txt-files-in-%24panoct_outresultsnonparalog_core_clusters)
 	- [Create multi-fasta files containing the orthologous cluster nt sequences from each genome](#create-multi-fasta-files-containing-the-orthologous-cluster-nt-sequences-from-each-genome)
