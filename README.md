@@ -71,7 +71,7 @@ This is a work-in-progress repository dedicated to exploring the Wolbachia pange
 - [creat .ctl file in text editor, and upload to $TransX/Phylip_nt/Paml_run](#creat-ctl-file-in-text-editor-and-upload-to-%24transxphylip_ntpaml_run)
 
 <!-- /MarkdownTOC -->
-#Phylogeny Directories
+# Phylogeny Directories
 Working_dir=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/Mugsy
 mkdir $Working_dir/Mugsy_out
 Mugsy_out=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/Mugsy/Mugsy_out
@@ -99,7 +99,7 @@ done < "$Mugsy_out"/accession.list
 Accession_list="$Mugsy_out"/accession.list
 
 
-#This command adds a parses the mugsy produced .maf file and adds aligned sequences corresponding to each strain to the .fna files produced in the previous step. 
+# This command adds a parses the mugsy produced .maf file and adds aligned sequences corresponding to each strain to the .fna files produced in the previous step. 
 while read line
 do
   marker=$(echo "$line" | awk -F " " '{print $1}')
