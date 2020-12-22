@@ -1,97 +1,91 @@
 # PanWolnome
 This is a work-in-progress repository dedicated to exploring the Wolbachia pangenome. 
 
-<!-- MarkdownTOC autolink="true" levels="1,2,3,4" -->
+<!-- MarkdownTOC autolink="true" -->
 
-- [Phylogeny Directories](#Phylogeny-Directories)
-- isolates strain accession list from maf file
-- this set of commands makes the processed directory, removes any prior contents, and then reads each line of the accesssion.list file and creates separate .fna file for each item in accession.list, and then starts a fasta header within each .fna file that contains the file name.
-- This command adds a parses the mugsy produced .maf file and adds aligned sequences corresponding to each strain to the .fna files produced in the previous step.
-- concatenate aligned sequence fastas, change directories to the Mugsy_out directory, and invoke mothur
-- Run the following mothur commands
-- change the name of the mothur output. concat_alignment.fna is the file needed for running iqtree
-- change fasta headers of concat_alignment.fna
-- Create tree file from strain_concat_alignment.fna using IQTree
-- Swap accessions for abreviated names in concat_alignment.fna.treefile using accession.hash
-- Create tree file from a subset of strains, including wBm, wBp, wCle, wMel, wOo, wOv
-	- Subset records for wBm, wBp, wCle, wMel, wOo, wO
-- [Selection Analysis Directories](#Selection-Analysis-Directories)
-- Run PanOCT
-	- Make genomes.list file \(option --genome_list_file\)
-	- Make combined.fasta containing all nt fasta records for coding sequences in all genomes \(option: --combined_fasta\)
-		- Concatenate all coding sequences
-		- Simplify headers from verbose_combined.fasta so that they only include locus tags and delete empty lines
-	- Make combined.att containing attributes for all nt fasta records for all coding sequenes in all genomes \(option: --combined.att\). This is necessary because the gbk files can contain locus tags that have no corresponding sequence in the coding seq fasta.
-		- Make 1st column of combined.att \(grab only the genome accession without the ".\[0-9\]"\)
-		- Make 2nd column of combined.att \(grab only the locus tag\)
-		- Make 3rd and 4th columns of combined.att \(coordinates for each feature reversing coordinates when genes are on "complementary" strand\)
-		- Make 5th column of combined.att \(grab the protein annotation\)
-		- Make 6th column of combined.att containing the name of the genome \(e.g. wBp\) of the appropriate strain on every line
-			- print the number of coading sequences in each strain
-			- make a file that has the name of each strain printed the same number of times as coading sequences it contains \(for each line in the pasted .list and .num files \[separated by a \t which can be specified with IFS=$'\t'\], the command reads field 1 and field 2, prints the value in field 1 the number of times specified in field 2, and appends output to col6.att\)
-		- Paste columns together to creat combined.att
-		- Split combined.att file by genome id in column 6
-	- Run panoct nt pipeline
-- Aggregate list of core genes for each strain
-	- Run R code to generate a strain-specific list of
-	- Delete first row of each strain-specific list of core coding sequences \(all files contain x in their first row\)
-	- Concatenate strain-specific lists of core coding sequences
-	- Pull out sequences corresponding to contents of core_ortholist.txt
-	- reorder all seqs in core_genseqs.fna according to the order in core_ortholist.txt
-		- run reorder_fasta.py
-	- Split ordered_core_geneseqs.fna by strain accoding to header information
-		- Create genome look-up table
-		- rename strain-specific core genome files
-	- Create strain-specific core genome files consisting of concatenated core genes
-		- Add '#' to each record in each core gene fasta
-		- Add a fasta header containing the file name to the first line of each .core.fna
-		- Remove .core.fna extension from the file name header and remove all gene record headers
-		- Concatenate all core genomes and format the concatenated file so that each line contains 60 nt
-- Run translatorx
-	- Run R code
-				- PARALOG ANALYSIS
-- this command iterates over each column, and writes the contents of each column to a new file titled with the header of the column
-	- delete first row in all .txt files in $Panoct_out/results/Nonparalog_core_clusters
-	- Create multi-fasta files containing the orthologous cluster nt sequences from each genome
-		- This loop iterates over all .txt files containing the lists of ortholog locus tags per cluster and extracts the corresponding sequneces from the $Combined_fasta file
-		- Remove stop codons from the end of each fasta record in each multifasta file
-	- Execute translatorx for each
-- Analyze nematode clade
-	- Run additional R code
-	- Create multi-fasta files containing the orthologous cluster nt sequences from each genome
-		- This loop iterates over all .txt files containing the lists of ortholog locus tags per cluster and extracts the corresponding sequneces from the $Combined_fasta file
-		- Remove stop codons from the end of each fasta record in each multifasta file
-	- Execute translatorx for each
-- Alphanumeritize fasta records
-- Convert all fasta alignments to phylip alignments
-- Rename all sequence header labels so that labels match the treefile strains
-- Run PAML
-- creat .ctl file in text editor, and upload to $TransX/Phylip_nt/Paml_run
+- [Phylogeny Directories](#phylogeny-directories)
+- [Test](#test)
+- [Test2](#test2)
+- [T3](#t3)
+- [Isolate strain accession list from mugsy generated multiple alignment file \(.maf\)](#isolate-strain-accession-list-from-mugsy-generated-multiple-alignment-file-maf)
+- [this set of commands makes the processed directory, removes any prior contents, and then reads each line of the accesssion.list file and creates separate .fna file for each item in accession.list, and then starts a fasta header within each .fna file that contains the file name.](#this-set-of-commands-makes-the-processed-directory-removes-any-prior-contents-and-then-reads-each-line-of-the-accesssionlist-file-and-creates-separate-fna-file-for-each-item-in-accessionlist-and-then-starts-a-fasta-header-within-each-fna-file-that-contains-the-file-name)
+- [This command adds a parses the mugsy produced .maf file and adds aligned sequences corresponding to each strain to the .fna files produced in the previous step.](#this-command-adds-a-parses-the-mugsy-produced-maf-file-and-adds-aligned-sequences-corresponding-to-each-strain-to-the-fna-files-produced-in-the-previous-step)
+- [concatenate aligned sequence fastas, change directories to the Mugsy_out directory, and invoke mothur](#concatenate-aligned-sequence-fastas-change-directories-to-the-mugsy_out-directory-and-invoke-mothur)
+- [Run the following mothur commands](#run-the-following-mothur-commands)
+- [change the name of the mothur output. concat_alignment.fna is the file needed for running iqtree](#change-the-name-of-the-mothur-output-concat_alignmentfna-is-the-file-needed-for-running-iqtree)
+- [change fasta headers of concat_alignment.fna](#change-fasta-headers-of-concat_alignmentfna)
+- [Create tree file from strain_concat_alignment.fna using IQTree](#create-tree-file-from-strain_concat_alignmentfna-using-iqtree)
+- [Swap accessions for abreviated names in concat_alignment.fna.treefile using accession.hash](#swap-accessions-for-abreviated-names-in-concat_alignmentfnatreefile-using-accessionhash)
+- [Create tree file from a subset of strains, including wBm, wBp, wCle, wMel, wOo, wOv](#create-tree-file-from-a-subset-of-strains-including-wbm-wbp-wcle-wmel-woo-wov)
+	- [Subset records for wBm, wBp, wCle, wMel, wOo, wO](#subset-records-for-wbm-wbp-wcle-wmel-woo-wo)
+- [Selection Analysis Directories](#selection-analysis-directories)
+- [Run PanOCT](#run-panoct)
+	- [Make genomes.list file \(option --genome_list_file\)](#make-genomeslist-file-option---genome_list_file)
+	- [Make combined.fasta containing all nt fasta records for coding sequences in all genomes \(option: --combined_fasta\)](#make-combinedfasta-containing-all-nt-fasta-records-for-coding-sequences-in-all-genomes-option---combined_fasta)
+		- [Concatenate all coding sequences](#concatenate-all-coding-sequences)
+		- [Simplify headers from verbose_combined.fasta so that they only include locus tags and delete empty lines](#simplify-headers-from-verbose_combinedfasta-so-that-they-only-include-locus-tags-and-delete-empty-lines)
+	- [Make combined.att containing attributes for all nt fasta records for all coding sequenes in all genomes \(option: --combined.att\). This is necessary because the gbk files can contain locus tags that have no corresponding sequence in the coding seq fasta.](#make-combinedatt-containing-attributes-for-all-nt-fasta-records-for-all-coding-sequenes-in-all-genomes-option---combinedatt-this-is-necessary-because-the-gbk-files-can-contain-locus-tags-that-have-no-corresponding-sequence-in-the-coding-seq-fasta)
+		- [Make 1st column of combined.att \(grab only the genome accession without the ".\[0-9\]"\)](#make-1st-column-of-combinedatt-grab-only-the-genome-accession-without-the-0-9)
+		- [Make 2nd column of combined.att \(grab only the locus tag\)](#make-2nd-column-of-combinedatt-grab-only-the-locus-tag)
+		- [Make 3rd and 4th columns of combined.att \(coordinates for each feature reversing coordinates when genes are on "complementary" strand\)](#make-3rd-and-4th-columns-of-combinedatt-coordinates-for-each-feature-reversing-coordinates-when-genes-are-on-complementary-strand)
+		- [Make 5th column of combined.att \(grab the protein annotation\)](#make-5th-column-of-combinedatt-grab-the-protein-annotation)
+		- [Make 6th column of combined.att containing the name of the genome \(e.g. wBp\) of the appropriate strain on every line](#make-6th-column-of-combinedatt-containing-the-name-of-the-genome-eg-wbp-of-the-appropriate-strain-on-every-line)
+			- [print the number of coading sequences in each strain](#print-the-number-of-coading-sequences-in-each-strain)
+			- [make a file that has the name of each strain printed the same number of times as coading sequences it contains \(for each line in the pasted .list and .num files \[separated by a \t which can be specified with IFS=$'\t'\], the command reads field 1 and field 2, prints the value in field 1 the number of times specified in field 2, and appends output to col6.att\)](#make-a-file-that-has-the-name-of-each-strain-printed-the-same-number-of-times-as-coading-sequences-it-contains-for-each-line-in-the-pasted-list-and-num-files-separated-by-a-t-which-can-be-specified-with-ifs%24t-the-command-reads-field-1-and-field-2-prints-the-value-in-field-1-the-number-of-times-specified-in-field-2-and-appends-output-to-col6att)
+		- [Paste columns together to creat combined.att](#paste-columns-together-to-creat-combinedatt)
+		- [Split combined.att file by genome id in column 6](#split-combinedatt-file-by-genome-id-in-column-6)
+	- [Run panoct nt pipeline](#run-panoct-nt-pipeline)
+- [Aggregate list of core genes for each strain](#aggregate-list-of-core-genes-for-each-strain)
+	- [Run R code to generate a strain-specific list of](#run-r-code-to-generate-a-strain-specific-list-of)
+	- [Delete first row of each strain-specific list of core coding sequences \(all files contain x in their first row\)](#delete-first-row-of-each-strain-specific-list-of-core-coding-sequences-all-files-contain-x-in-their-first-row)
+	- [Concatenate strain-specific lists of core coding sequences](#concatenate-strain-specific-lists-of-core-coding-sequences)
+	- [Pull out sequences corresponding to contents of core_ortholist.txt](#pull-out-sequences-corresponding-to-contents-of-core_ortholisttxt)
+	- [reorder all seqs in core_genseqs.fna according to the order in core_ortholist.txt](#reorder-all-seqs-in-core_genseqsfna-according-to-the-order-in-core_ortholisttxt)
+		- [run reorder_fasta.py](#run-reorder_fastapy)
+	- [Split ordered_core_geneseqs.fna by strain accoding to header information](#split-ordered_core_geneseqsfna-by-strain-accoding-to-header-information)
+		- [Create genome look-up table](#create-genome-look-up-table)
+		- [rename strain-specific core genome files](#rename-strain-specific-core-genome-files)
+	- [Create strain-specific core genome files consisting of concatenated core genes](#create-strain-specific-core-genome-files-consisting-of-concatenated-core-genes)
+		- [Add '#' to each record in each core gene fasta](#add--to-each-record-in-each-core-gene-fasta)
+		- [Add a fasta header containing the file name to the first line of each .core.fna](#add-a-fasta-header-containing-the-file-name-to-the-first-line-of-each-corefna)
+		- [Remove .core.fna extension from the file name header and remove all gene record headers](#remove-corefna-extension-from-the-file-name-header-and-remove-all-gene-record-headers)
+		- [Concatenate all core genomes and format the concatenated file so that each line contains 60 nt](#concatenate-all-core-genomes-and-format-the-concatenated-file-so-that-each-line-contains-60-nt)
+- [Run translatorx](#run-translatorx)
+	- [Run R code](#run-r-code)
+				- [PARALOG ANALYSIS](#paralog-analysis)
+- [this command iterates over each column, and writes the contents of each column to a new file titled with the header of the column](#this-command-iterates-over-each-column-and-writes-the-contents-of-each-column-to-a-new-file-titled-with-the-header-of-the-column)
+	- [delete first row in all .txt files in $Panoct_out/results/Nonparalog_core_clusters](#delete-first-row-in-all-txt-files-in-%24panoct_outresultsnonparalog_core_clusters)
+	- [Create multi-fasta files containing the orthologous cluster nt sequences from each genome](#create-multi-fasta-files-containing-the-orthologous-cluster-nt-sequences-from-each-genome)
+		- [This loop iterates over all .txt files containing the lists of ortholog locus tags per cluster and extracts the corresponding sequneces from the $Combined_fasta file](#this-loop-iterates-over-all-txt-files-containing-the-lists-of-ortholog-locus-tags-per-cluster-and-extracts-the-corresponding-sequneces-from-the-%24combined_fasta-file)
+		- [Remove stop codons from the end of each fasta record in each multifasta file](#remove-stop-codons-from-the-end-of-each-fasta-record-in-each-multifasta-file)
+	- [Execute translatorx for each](#execute-translatorx-for-each)
+- [Analyze nematode clade](#analyze-nematode-clade)
+	- [Run additional R code](#run-additional-r-code)
+	- [Create multi-fasta files containing the orthologous cluster nt sequences from each genome](#create-multi-fasta-files-containing-the-orthologous-cluster-nt-sequences-from-each-genome-1)
+		- [This loop iterates over all .txt files containing the lists of ortholog locus tags per cluster and extracts the corresponding sequneces from the $Combined_fasta file](#this-loop-iterates-over-all-txt-files-containing-the-lists-of-ortholog-locus-tags-per-cluster-and-extracts-the-corresponding-sequneces-from-the-%24combined_fasta-file-1)
+		- [Remove stop codons from the end of each fasta record in each multifasta file](#remove-stop-codons-from-the-end-of-each-fasta-record-in-each-multifasta-file-1)
+	- [Execute translatorx for each](#execute-translatorx-for-each-1)
+- [Alphanumeritize fasta records](#alphanumeritize-fasta-records)
+- [Convert all fasta alignments to phylip alignments](#convert-all-fasta-alignments-to-phylip-alignments)
+- [Rename all sequence header labels so that labels match the treefile strains](#rename-all-sequence-header-labels-so-that-labels-match-the-treefile-strains)
+- [Run PAML](#run-paml)
+- [creat .ctl file in text editor, and upload to $TransX/Phylip_nt/Paml_run](#creat-ctl-file-in-text-editor-and-upload-to-%24transxphylip_ntpaml_run)
 
 <!-- /MarkdownTOC -->
-# Phylogeny Directories
+#Phylogeny Directories
 Working_dir=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/Mugsy
 mkdir $Working_dir/Mugsy_out
 Mugsy_out=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/Mugsy/Mugsy_out
 Mothur_dir=/usr/local/packages/mothur-1.40.4
 IQTree=/local/aberdeen2rw/julie/Jarrett/Programs/IQtree/iqtree-1.6.12-Linux/bin/iqtree
 
-Working_dir=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol
-Panoct_bin=/local/aberdeen2rw/julie/Jarrett/Programs/PanOCT/PanGenomePipeline-master/pangenome/bin
-Gbks=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/GenBank/SimpleExten
-Genes_dir=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/Fasta/CodingSeqs/Nucleotides
-Prots_dir=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/Fasta/CodingSeqs/AminoAcids
-Scripts=/local/aberdeen2rw/julie/Jarrett/Scripts
-Panoct_out="$Working_dir"/PanOCTpl_out
-Programs=/local/aberdeen2rw/julie/Jarrett/Programs
-Paml_dir=/local/aberdeen2rw/julie/Jarrett/Programs/PAML/paml4.9j
-IQTree=/local/aberdeen2rw/julie/Jarrett/Programs/IQtree/iqtree-1.6.12-Linux/bin/iqtree
-Test=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/PanOCTpl_out/results/Nonparalog_nemacore_clusters/Fasta_seqs/Transx_out/test/
-TransX=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/PanOCTpl_out/results/Nonparalog_nemacore_clusters/Fasta_seqs/No_stops_Fasta_seqs/Transx_out
-NoStopsTest=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/PanOCTpl_out/results/Nonparalog_nemacore_clusters/Fasta_seqs/No_stops_Fasta_seqs/Transx_out/Test2
+#Test
 
+# Test2
 
-#isolates strain accession list from maf file	
+#   T3
+
+#Isolate strain accession list from mugsy generated multiple alignment file (.maf)	
 awk '{print $2}' $Mugsy_out/mugsy.maf | grep -v "score" |sort | uniq | sed '/^$/d' | grep -v "ver" | sed 's/.*\.//g' > accession.list 
 
 #this set of commands makes the processed directory, removes any prior contents, and then reads each line of the accesssion.list file and creates separate .fna file for each item in accession.list, and then starts a fasta header within each .fna file that contains the file name. 
@@ -144,7 +138,7 @@ seqkit replace -p "(.+)" -r '{kv}' -k "$Mugsy_out"/accession.hash "$Mugsy_out"/c
 
 "
 
-#Create tree file from strain_concat_alignment.fna using IQTree
+# Create tree file from strain_concat_alignment.fna using IQTree
 $IQTree -s "$Mugsy_out"/strain_concat_alignment.fna -nt 4 -bb 1000 -redo
 
 #Swap accessions for abreviated names in concat_alignment.fna.treefile using accession.hash
@@ -155,7 +149,7 @@ awk 'BEGIN {RS=">"} /wMel|wBm|wBp|wCle|wOo|wOv/ {print ">"$0}' strain_concat_ali
 $IQTree -s "$Mugsy_out"/fil_wMelOG_concat_alignment.fna -nt 4 -bb 1000 -redo
 
 
-# Selection-Analysis-Directories
+#Selection Analysis Directories
 Working_dir=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol
 Panoct_bin=/local/aberdeen2rw/julie/Jarrett/Programs/PanOCT/PanGenomePipeline-master/pangenome/bin
 Gbks=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/GenBank/SimpleExten
