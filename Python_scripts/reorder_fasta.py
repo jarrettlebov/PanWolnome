@@ -1,4 +1,4 @@
-#The script below was obtained from http://seqanswers.com/forums/showthread.php?t=29558
+The script below was obtained from http://seqanswers.com/forums/showthread.php?t=29558
 
 #!/usr/bin/env python
 
