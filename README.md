@@ -72,7 +72,7 @@ Mugsy_out=/local/aberdeen2rw/julie/Jarrett/Ref_genomes/Wolbachia/PanWol/Mugsy/Mu
 Mothur_dir=/usr/local/packages/mothur-1.40.4
 IQTree=/local/aberdeen2rw/julie/Jarrett/Programs/IQtree/iqtree-1.6.12-Linux/bin/iqtree
 ```
-# Isolate strain accession list from mugsy-generated multiple alignment file (.maf)	
+# Isolate strain accession list from [mugsy](http://mugsy.sourceforge.net/)-generated multiple alignment file (.maf)	
 ```{bash, eval =F}
 awk '{print $2}' $Mugsy_out/mugsy.maf | grep -v "score" |sort | uniq | sed '/^$/d' | grep -v "ver" | sed 's/.*\.//g' > accession.list 
 ```
